@@ -1,3 +1,3 @@
-class RouterName {
-  static const onboardingScreen = "";
+class RoutesName {
+  static const onboardingScreen = "/onboarding_screen";
 }
