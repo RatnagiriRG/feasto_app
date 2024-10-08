@@ -12,8 +12,7 @@ class CustomPageRouteSlowTransition<T> extends PageRoute<T> {
   var brightness = SchedulerBinding.instance.window.platformBrightness;
 
   @override
-  Color get barrierColor =>
-      brightness == Brightness.dark ? Colors.black : Colors.white;
+  Color get barrierColor => Colors.transparent;
 
   @override
   String get barrierLabel => "";
@@ -43,8 +42,7 @@ class CustomPageRouteFastTransition<T> extends PageRoute<T> {
   var brightness = SchedulerBinding.instance.window.platformBrightness;
 
   @override
-  Color get barrierColor =>
-      brightness == Brightness.dark ? Colors.black : Colors.white;
+  Color get barrierColor => Colors.transparent;
 
   @override
   String get barrierLabel => "";

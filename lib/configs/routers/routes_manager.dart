@@ -8,7 +8,7 @@ class RouteManager {
     final argument = settings.arguments;
     switch (settings.name) {
       case RoutesName.onboardingScreen:
-        return CustomPageRouteZoomTransition(const OnboardScreen());
+        return CustomPageRouteSlowTransition(const OnboardScreen());
 
       default:
         return CustomPageRouteSlowTransition(

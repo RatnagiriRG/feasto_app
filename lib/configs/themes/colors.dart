@@ -24,4 +24,6 @@ class AppColors {
   //
   static Color get scaffoldBackGroundColor =>
       const Color.fromRGBO(21, 21, 24, 100);
+
+  static Color get primaryColor => Color.fromRGBO(38, 38, 45, 1);
 }

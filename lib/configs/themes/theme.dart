@@ -18,7 +18,7 @@ class MyAppTheme {
       seedColor: AppColors.white,
 
       //   brightness: Brightness.dark,
-      //   primary: AppDarkColors.darkPrimaryColor,
+      primary: AppColors.primaryColor,
       //   secondary: AppDarkColors.darkSecondaryColor,
       //   onSecondary: AppDarkColors.darkOnSecondaryColor,
       tertiary: AppColors.white,

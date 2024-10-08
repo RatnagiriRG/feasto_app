@@ -1,6 +1,7 @@
 import 'package:feasto/configs/components/gradient_text.dart';
 import 'package:feasto/configs/constants/app_image.dart';
 import 'package:feasto/configs/extensions/mediaquery_extensions.dart';
+import 'package:feasto/configs/routers/routes_name.dart';
 import 'package:flutter/material.dart';
 
 class SplashScreen extends StatefulWidget {
@@ -41,6 +42,8 @@ class _SplashScreenState extends State<SplashScreen>
     });
 
     Future.delayed(const Duration(seconds: 3), () {
+      // ignore: use_build_context_synchronously
+      Navigator.of(context).pushNamed(RoutesName.onboardingScreen);
       _rotationController.stop();
     });
   }
@@ -76,7 +79,7 @@ class _SplashScreenState extends State<SplashScreen>
                   builder: (context, child) {
                     return Transform.rotate(
                       angle: _rotationController.value *
-                          2.48 *
+                          2.4 *
                           3.1416, // Full rotation in radians
                       child: Transform.scale(
                         scale: _scaleAnimation.value, // Apply zoom effect
