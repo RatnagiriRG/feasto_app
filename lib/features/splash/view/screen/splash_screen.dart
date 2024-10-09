@@ -3,6 +3,7 @@ import 'package:feasto/configs/constants/app_image.dart';
 import 'package:feasto/configs/extensions/mediaquery_extensions.dart';
 import 'package:feasto/configs/routers/routes_name.dart';
 import 'package:flutter/material.dart';
+import 'dart:math' as math;
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({Key? key}) : super(key: key);
@@ -24,9 +25,7 @@ class _SplashScreenState extends State<SplashScreen>
     _rotationController = AnimationController(
       vsync: this,
       duration: const Duration(seconds: 3),
-    );
-
-    _rotationController.forward();
+    )..forward();
 
     _scaleController = AnimationController(
       vsync: this,
@@ -37,14 +36,13 @@ class _SplashScreenState extends State<SplashScreen>
       CurvedAnimation(parent: _scaleController, curve: Curves.easeInOut),
     );
 
-    Future.delayed(const Duration(seconds: 1), () {
-      _startZoomAnimation();
-    });
+    Future.delayed(const Duration(seconds: 1), _startZoomAnimation);
 
     Future.delayed(const Duration(seconds: 3), () {
-      // ignore: use_build_context_synchronously
-      Navigator.of(context).pushNamed(RoutesName.onboardingScreen);
-      _rotationController.stop();
+      if (mounted) {
+        Navigator.of(context).pushReplacementNamed(RoutesName.onboardingScreen);
+        _rotationController.stop();
+      }
     });
   }
 
@@ -72,27 +70,23 @@ class _SplashScreenState extends State<SplashScreen>
         children: [
           Center(
             child: AnimatedBuilder(
-              animation: _rotationController,
+              animation:
+                  Listenable.merge([_rotationController, _scaleController]),
               builder: (context, child) {
-                return AnimatedBuilder(
-                  animation: _scaleController,
-                  builder: (context, child) {
-                    return Transform.rotate(
-                      angle: _rotationController.value *
-                          2.4 *
-                          3.1416, // Full rotation in radians
-                      child: Transform.scale(
-                        scale: _scaleAnimation.value, // Apply zoom effect
-                        child: child,
-                      ),
-                    );
-                  },
-                  child: Image.asset(
-                    AppImage.feastoLogo,
-                    height: scrHeight * 0.15,
+                return Transform.rotate(
+                  angle: _rotationController.value *
+                      2.4 *
+                      math.pi, // Full rotation
+                  child: Transform.scale(
+                    scale: _scaleAnimation.value, // Zoom effect
+                    child: child,
                   ),
                 );
               },
+              child: Image.asset(
+                AppImage.feastoLogo,
+                height: scrHeight * 0.15,
+              ),
             ),
           ),
           Positioned(

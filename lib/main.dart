@@ -6,8 +6,7 @@ import 'package:feasto/multi_provider.dart';
 import 'package:flutter/material.dart';
 
 void main() async {
-  // runApp(MyAppMultiProvider(myApp: MyApp()));
-  runApp(MyApp());
+  runApp(const MyAppMultiProvider(myApp: MyApp()));
 }
 
 class MyApp extends StatelessWidget {

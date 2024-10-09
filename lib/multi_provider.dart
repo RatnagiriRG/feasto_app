@@ -1,3 +1,4 @@
+import 'package:feasto/features/splash/view_model/onboard_view_model.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -6,6 +7,10 @@ class MyAppMultiProvider extends StatelessWidget {
   final Widget myApp;
   @override
   Widget build(BuildContext context) {
-    return MultiProvider(providers: [], child: myApp);
+    return MultiProvider(providers: [
+      ChangeNotifierProvider(
+        create: (context) => OnboardViewModel(),
+      )
+    ], child: myApp);
   }
 }
