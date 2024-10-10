@@ -29,7 +29,9 @@ class SessionController {
       if (userData is String && userData.isNotEmpty) {
         SessionController().user =
             UserSessionData.fromJson(jsonDecode(userData));
-        log("Bearer Token ==> ${SessionController().user.accessToken}");
+        if (SessionController().user.accessToken != null) {
+          log("Authentication Token present");
+        }
       }
       SessionController().isLogin = isLogin == 'true' ? true : false;
     } catch (e) {

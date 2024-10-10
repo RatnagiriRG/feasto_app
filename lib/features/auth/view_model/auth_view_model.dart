@@ -1,5 +1,6 @@
 import 'dart:developer';
 
+import 'package:feasto/data/local/session_controller.dart';
 import 'package:feasto/data/network/network_api_services.dart';
 import 'package:feasto/features/auth/repo/auth_repository_impl.dart';
 
@@ -35,17 +36,20 @@ class AuthViewModel extends ChangeNotifier {
   }
 
   Future<void> signIn() async {
-    // final userSession = SessionController().user;
+    final userSession = SessionController().user;
     try {
       final result = await _authRepository.signIn(
           email: _emailController.text, password: _passwordController.text);
+
+      if (result != null) {
+        SessionController().saveUserSession(result);
+      }
     } catch (e) {
       log(e.toString());
     }
   }
 
   void disposeViewModel() {
-    log("sbdnsbdsm");
     _emailController.dispose();
     _passwordController.dispose();
     _rePasswordController.dispose();
