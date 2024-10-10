@@ -21,7 +21,7 @@ class DioExceptions implements Exception {
         errorMessage = _handleStatusCode(dioException.response?.statusCode);
         break;
       case DioExceptionType.connectionError:
-        errorMessage = 'No Internet.';
+        errorMessage = 'connection lost';
         break;
       case DioExceptionType.unknown:
         errorMessage = 'Unexpected error occurred.';

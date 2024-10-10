@@ -1,88 +1,125 @@
 import 'dart:async';
+import 'dart:developer';
 import 'package:dio/dio.dart';
+import 'package:feasto/configs/app_urls.dart';
 import 'package:feasto/data/local/session_controller.dart';
 
 class DioInterceptor extends Interceptor {
   final Dio _dio;
-  final SessionController _sessionController = SessionController();
-  Completer<bool>? _refreshCompleter;
 
   DioInterceptor(this._dio);
 
   @override
-  Future<void> onRequest(
-      RequestOptions options, RequestInterceptorHandler handler) async {
-    final accessToken = await _sessionController.getAccessToken();
+  void onRequest(RequestOptions options, RequestInterceptorHandler handler) {
+    options.headers.addAll({
+      "Content-Type": "application/json",
+      "Accept": "*/*",
+    });
 
-    if (accessToken != null) {
-      options.headers["Authorization"] = "Bearer $accessToken";
+    // if the user is loged in
+    final userSession = SessionController().user;
+    if (userSession.accessToken != null &&
+        options.path != AppUrls.refreshToken) {
+      options.headers.addAll({
+        "Authorization": "Bearer ${userSession.accessToken}",
+      });
     }
 
-    return handler.next(options);
+    super.onRequest(options, handler);
   }
 
   @override
-  Future<void> onError(DioError err, ErrorInterceptorHandler handler) async {
-    if (err.response?.statusCode == 401) {
-      final isTokenRefreshed = await _refreshAccessToken();
-
-      if (isTokenRefreshed) {
-        final retryRequest = await _retryRequest(err.requestOptions);
-        return handler.resolve(retryRequest);
+  void onError(DioException err, ErrorInterceptorHandler handler) async {
+    if (err.response?.statusCode == 401 &&
+        err.requestOptions.path != AppUrls.refreshToken &&
+        err.requestOptions.path != AppUrls.login) {
+      if (err.requestOptions.path == AppUrls.logout) {
+        return;
       }
+      if (await _refreshAccessToken()) {
+        try {
+          handler.resolve(await _retryRequest(err.requestOptions));
+        } on DioException catch (e) {
+          handler.next(e);
+        }
+      }
+
+      return;
     }
 
-    return handler.next(err);
+    handler.reject(err);
   }
 
   Future<bool> _refreshAccessToken() async {
-    if (_refreshCompleter != null) {
-      return _refreshCompleter!.future;
-    }
-
-    _refreshCompleter = Completer();
+    final userSession = SessionController().user;
+    Map<String, dynamic> data = {"refreshToken": userSession.refreshToken};
+    const path = AppUrls.refreshToken;
     try {
-      final refreshToken = await _sessionController.getRefreshToken();
+      final response = await _dio.post(
+        path,
+        data: data,
+      );
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        final accessToken = response.data["data"]["accessToken"];
+        final refreshToken = response.data["data"]["refreshToken"];
+        final newUserSession = userSession.copyWith(
+          accessToken: accessToken,
+          refreshToken: refreshToken,
+        );
 
-      if (refreshToken == null) {
-        _refreshCompleter!.complete(false);
-        return false;
+        await SessionController().saveUserSession(newUserSession);
+        if (accessToken != null && refreshToken != null) {
+          return true;
+        }
       }
 
-      final response = await _dio.post('/client-refresh-token', data: {
-        'refreshToken': refreshToken,
-      });
-
-      if (response.statusCode == 200) {
-        final newAccessToken = response.data['accessToken'];
-        final newRefreshToken = response.data['refreshToken'];
-
-        await _sessionController.saveSession({
-          'token': newAccessToken,
-          'refreshToken': newRefreshToken,
-        });
-
-        _refreshCompleter!.complete(true);
-        return true;
-      }
-
-      _refreshCompleter!.complete(false);
       return false;
-    } catch (e) {
-      _refreshCompleter!.complete(false);
+    } on DioException catch (e) {
+      log("$e  REFRESH TOKKEN EXCEPTION FROM INTERCEPTOR");
+      // _handleRefreshTokenException(e);
       return false;
-    } finally {
-      _refreshCompleter = null;
     }
   }
 
+  //   Future<void> _handleRefreshTokenException(DioException e) async {
+  //   await _logout();
+  //   final currentContext = NavigationService.navigatorKey.currentContext;
+  //   if (currentContext != null && currentContext.mounted) {
+  //     final userProfileViewModel = currentContext.read<UserProfileViewModel>();
+  //     await userProfileViewModel.clearAllSession(context: currentContext);
+  //     if (!currentContext.mounted) return;
+  //     Navigator.pushNamedAndRemoveUntil(
+  //       currentContext,
+  //       RoutesName.onboardingScreen,
+  //       (route) => false,
+  //     );
+  //   }
+  // }
+
+  // Future<void> _logout() async {
+  //   final userSession = SessionController().user;
+  //   final headers = {"Authorization": "Bearer ${userSession.accessToken}"};
+  //   Dio dioInstance =
+  //       Dio(BaseOptions(baseUrl: AppUrl.baseURL, headers: headers));
+  //   try {
+  //     final data = {
+  //       "refreshToken": userSession.refreshToken,
+  //       "userId": userSession.userId,
+  //     };
+  //     await dioInstance.post(AppUrl.logOutUser, data: data);
+  //   } on DioException catch (e) {
+  //     var error = DioExceptions.fromDioException(e);
+  //     error.errorMessage;
+  //   }
+  // }
+
   Future<Response> _retryRequest(RequestOptions requestOptions) async {
-    final newAccessToken = await _sessionController.getAccessToken();
+    final userSession = SessionController().user;
     final options = Options(
       method: requestOptions.method,
       headers: {
         ...requestOptions.headers,
-        'Authorization': 'Bearer $newAccessToken',
+        'Authorization': 'Bearer ${userSession.accessToken}',
       },
     );
     return _dio.request(

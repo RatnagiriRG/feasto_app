@@ -1,32 +1,45 @@
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'dart:convert';
+import 'dart:developer';
+import 'package:feasto/features/auth/model/user_session_model.dart';
+import 'package:feasto/data/local/local_storage.dart';
 
 class SessionController {
   static final _instance = SessionController._internal();
   factory SessionController() => _instance;
-  SessionController._internal();
 
-  final FlutterSecureStorage _storage = const FlutterSecureStorage();
+  final LocalStorage _localStorage = LocalStorage();
 
-  // Keys used to store session information
-  static const String _accessTokenKey = 'accessToken';
-  static const String _refreshTokenKey = 'refreshToken';
-  static const String _userIdKey = 'userId';
-
-  Future<void> saveSession(Map<String, dynamic> data) async {
-    await _storage.write(key: _accessTokenKey, value: data['token']);
-    await _storage.write(key: _refreshTokenKey, value: data['refreshToken']);
-    await _storage.write(key: _userIdKey, value: data['userid']);
+  bool? isLogin;
+  UserSessionData user = const UserSessionData();
+  SessionController._internal() {
+    isLogin = false;
   }
 
-  Future<String?> getAccessToken() async {
-    return await _storage.read(key: _accessTokenKey);
+  Future<void> saveUserSession(UserSessionData user) async {
+    _localStorage.setValue("tokens", jsonEncode(user));
+    _localStorage.setValue("isLogin", "true");
+    SessionController().user = user;
   }
 
-  Future<String?> getRefreshToken() async {
-    return await _storage.read(key: _refreshTokenKey);
+  Future<void> getUserFromPreference() async {
+    try {
+      var userData = await _localStorage.readValue('tokens');
+      var isLogin = await _localStorage.readValue('isLogin');
+
+      if (userData is String && userData.isNotEmpty) {
+        SessionController().user =
+            UserSessionData.fromJson(jsonDecode(userData));
+        log("Bearer Token ==> ${SessionController().user.accessToken}");
+      }
+      SessionController().isLogin = isLogin == 'true' ? true : false;
+    } catch (e) {
+      log(e.toString());
+    }
   }
 
-  Future<void> clearSession() async {
-    await _storage.deleteAll();
+  Future<void> clearLocalData() async {
+    user = const UserSessionData();
+    isLogin = null;
+    await _localStorage.clearAllValue();
   }
 }

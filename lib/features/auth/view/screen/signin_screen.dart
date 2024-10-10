@@ -5,11 +5,28 @@ import 'package:feasto/configs/constants/app_image.dart';
 import 'package:feasto/configs/extensions/mediaquery_extensions.dart';
 import 'package:feasto/configs/routers/routes_name.dart';
 import 'package:feasto/configs/themes/colors.dart';
+import 'package:feasto/features/auth/view/widgets/auth_password_text_field.dart';
+import 'package:feasto/features/auth/view/widgets/auth_email_text_field.dart';
+import 'package:feasto/features/auth/view_model/auth_view_model.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
+import 'package:provider/provider.dart';
 
-class SigninScreen extends StatelessWidget {
+class SigninScreen extends StatefulWidget {
   const SigninScreen({super.key});
+
+  @override
+  State<SigninScreen> createState() => _SigninScreenState();
+}
+
+class _SigninScreenState extends State<SigninScreen> {
+  late AuthViewModel _authViewModel;
+
+  @override
+  void initState() {
+    _authViewModel = context.read<AuthViewModel>();
+    _authViewModel.initlization();
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -71,81 +88,9 @@ class SigninScreen extends StatelessWidget {
                       ),
                     ),
                     (scrHeight * 0.03).height,
-                    Column(
-                      children: [
-                        SizedBox(
-                          width: scrWidth * 0.83,
-                          child: Row(
-                            children: [
-                              Text(
-                                "Email",
-                                style: textTheme.bodyMedium?.copyWith(
-                                  fontSize: scrHeight * 0.012,
-                                  color: AppColors.white.withOpacity(.6),
-                                ),
-                              )
-                            ],
-                          ),
-                        ),
-                        (scrHeight * 0.007).height,
-                        Container(
-                          height: scrHeight * 0.06,
-                          width: scrWidth * 0.85,
-                          decoration: BoxDecoration(
-                            color: AppColors.black.withOpacity(.4),
-                            borderRadius: BorderRadius.circular(8),
-                            border: Border.all(
-                              color: AppColors.white.withOpacity(.2),
-                            ),
-                          ),
-                          child: const TextField(
-                            keyboardType: TextInputType.emailAddress,
-                            decoration: InputDecoration(
-                              border: InputBorder.none,
-                              contentPadding: EdgeInsets.all(16.0),
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
+                    const AuthEmailTextField(),
                     (scrHeight * 0.025).height,
-                    Column(
-                      children: [
-                        SizedBox(
-                          width: scrWidth * 0.83,
-                          child: Row(
-                            children: [
-                              Text(
-                                "Password",
-                                style: textTheme.bodyMedium?.copyWith(
-                                  fontSize: scrHeight * 0.012,
-                                  color: AppColors.white.withOpacity(.6),
-                                ),
-                              )
-                            ],
-                          ),
-                        ),
-                        (scrHeight * 0.007).height,
-                        Container(
-                          height: scrHeight * 0.06,
-                          width: scrWidth * 0.85,
-                          decoration: BoxDecoration(
-                            color: AppColors.black.withOpacity(.4),
-                            borderRadius: BorderRadius.circular(8),
-                            border: Border.all(
-                              color: AppColors.white.withOpacity(.2),
-                            ),
-                          ),
-                          child: const TextField(
-                            obscureText: true,
-                            decoration: InputDecoration(
-                              border: InputBorder.none,
-                              contentPadding: EdgeInsets.all(16.0),
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
+                    const AuthPasswordTextField(),
                     (scrHeight * 0.025).height,
                     Column(
                       children: [
@@ -173,19 +118,24 @@ class SigninScreen extends StatelessWidget {
                           ),
                         ),
                         (scrHeight * 0.02).height,
-                        BouncingButtonWidget(
-                          child: Container(
-                            height: scrHeight * 0.06,
-                            width: scrWidth * 0.85,
-                            decoration: BoxDecoration(
-                              color: colorScheme.primary,
-                              borderRadius: BorderRadius.circular(8),
-                            ),
-                            child: Center(
-                              child: Text(
-                                "Sign in",
-                                style: textTheme.bodyMedium?.copyWith(
-                                  color: AppColors.white.withOpacity(.6),
+                        GestureDetector(
+                          onTap: () {
+                            context.read<AuthViewModel>().signIn();
+                          },
+                          child: BouncingButtonWidget(
+                            child: Container(
+                              height: scrHeight * 0.06,
+                              width: scrWidth * 0.85,
+                              decoration: BoxDecoration(
+                                color: colorScheme.primary,
+                                borderRadius: BorderRadius.circular(8),
+                              ),
+                              child: Center(
+                                child: Text(
+                                  "Sign in",
+                                  style: textTheme.bodyMedium?.copyWith(
+                                    color: AppColors.white.withOpacity(.6),
+                                  ),
                                 ),
                               ),
                             ),

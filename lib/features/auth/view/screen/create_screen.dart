@@ -3,8 +3,11 @@ import 'package:feasto/configs/components/boucing_button_widget.dart';
 import 'package:feasto/configs/components/gradient_text.dart';
 import 'package:feasto/configs/constants/app_image.dart';
 import 'package:feasto/configs/extensions/mediaquery_extensions.dart';
-import 'package:feasto/configs/routers/routes_name.dart';
 import 'package:feasto/configs/themes/colors.dart';
+import 'package:feasto/features/auth/view/widgets/auth_email_text_field.dart';
+import 'package:feasto/features/auth/view/widgets/auth_name_text_field.dart';
+import 'package:feasto/features/auth/view/widgets/auth_password_text_field.dart';
+import 'package:feasto/features/auth/view/widgets/auth_re_password_text_field.dart';
 import 'package:flutter/material.dart';
 
 class CreateScreen extends StatelessWidget {
@@ -69,157 +72,13 @@ class CreateScreen extends StatelessWidget {
                         ],
                       ),
                     ),
-                    Column(
-                      children: [
-                        SizedBox(
-                          width: scrWidth * 0.83,
-                          child: Row(
-                            children: [
-                              Text(
-                                "Name",
-                                style: textTheme.bodyMedium?.copyWith(
-                                  fontSize: scrHeight * 0.012,
-                                  color: AppColors.white.withOpacity(.6),
-                                ),
-                              )
-                            ],
-                          ),
-                        ),
-                        (scrHeight * 0.007).height,
-                        Container(
-                          height: scrHeight * 0.06,
-                          width: scrWidth * 0.85,
-                          decoration: BoxDecoration(
-                            color: AppColors.black.withOpacity(.4),
-                            borderRadius: BorderRadius.circular(8),
-                            border: Border.all(
-                              color: AppColors.white.withOpacity(.2),
-                            ),
-                          ),
-                          child: const TextField(
-                            keyboardType: TextInputType.text,
-                            decoration: InputDecoration(
-                              border: InputBorder.none,
-                              contentPadding: EdgeInsets.all(16.0),
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
+                    const AuthNameTextField(),
                     (scrHeight * 0.03).height,
-                    Column(
-                      children: [
-                        SizedBox(
-                          width: scrWidth * 0.83,
-                          child: Row(
-                            children: [
-                              Text(
-                                "Email",
-                                style: textTheme.bodyMedium?.copyWith(
-                                  fontSize: scrHeight * 0.012,
-                                  color: AppColors.white.withOpacity(.6),
-                                ),
-                              )
-                            ],
-                          ),
-                        ),
-                        (scrHeight * 0.007).height,
-                        Container(
-                          height: scrHeight * 0.06,
-                          width: scrWidth * 0.85,
-                          decoration: BoxDecoration(
-                            color: AppColors.black.withOpacity(.4),
-                            borderRadius: BorderRadius.circular(8),
-                            border: Border.all(
-                              color: AppColors.white.withOpacity(.2),
-                            ),
-                          ),
-                          child: const TextField(
-                            keyboardType: TextInputType.emailAddress,
-                            decoration: InputDecoration(
-                              border: InputBorder.none,
-                              contentPadding: EdgeInsets.all(16.0),
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
+                    const AuthEmailTextField(),
                     (scrHeight * 0.025).height,
-                    Column(
-                      children: [
-                        SizedBox(
-                          width: scrWidth * 0.83,
-                          child: Row(
-                            children: [
-                              Text(
-                                "Password",
-                                style: textTheme.bodyMedium?.copyWith(
-                                  fontSize: scrHeight * 0.012,
-                                  color: AppColors.white.withOpacity(.6),
-                                ),
-                              )
-                            ],
-                          ),
-                        ),
-                        (scrHeight * 0.007).height,
-                        Container(
-                          height: scrHeight * 0.06,
-                          width: scrWidth * 0.85,
-                          decoration: BoxDecoration(
-                            color: AppColors.black.withOpacity(.4),
-                            borderRadius: BorderRadius.circular(8),
-                            border: Border.all(
-                              color: AppColors.white.withOpacity(.2),
-                            ),
-                          ),
-                          child: const TextField(
-                            obscureText: true,
-                            decoration: InputDecoration(
-                              border: InputBorder.none,
-                              contentPadding: EdgeInsets.all(16.0),
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
+                    const AuthPasswordTextField(),
                     (scrHeight * 0.025).height,
-                    Column(
-                      children: [
-                        SizedBox(
-                          width: scrWidth * 0.83,
-                          child: Row(
-                            children: [
-                              Text(
-                                "Re-Password",
-                                style: textTheme.bodyMedium?.copyWith(
-                                  fontSize: scrHeight * 0.012,
-                                  color: AppColors.white.withOpacity(.6),
-                                ),
-                              )
-                            ],
-                          ),
-                        ),
-                        (scrHeight * 0.007).height,
-                        Container(
-                          height: scrHeight * 0.06,
-                          width: scrWidth * 0.85,
-                          decoration: BoxDecoration(
-                            color: AppColors.black.withOpacity(.4),
-                            borderRadius: BorderRadius.circular(8),
-                            border: Border.all(
-                              color: AppColors.white.withOpacity(.2),
-                            ),
-                          ),
-                          child: const TextField(
-                            obscureText: true,
-                            decoration: InputDecoration(
-                              border: InputBorder.none,
-                              contentPadding: EdgeInsets.all(16.0),
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
+                    const AuthRePasswordTextField(),
                     (scrHeight * 0.025).height,
                     BouncingButtonWidget(
                       child: Container(
