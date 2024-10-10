@@ -2,6 +2,7 @@ import 'package:feasto/configs/components/gradient_text.dart';
 import 'package:feasto/configs/constants/app_image.dart';
 import 'package:feasto/configs/extensions/mediaquery_extensions.dart';
 import 'package:feasto/configs/routers/routes_name.dart';
+import 'package:feasto/features/splash/view_model/onboard_view_model.dart';
 import 'package:flutter/material.dart';
 import 'dart:math' as math;
 
@@ -40,7 +41,7 @@ class _SplashScreenState extends State<SplashScreen>
 
     Future.delayed(const Duration(seconds: 3), () {
       if (mounted) {
-        Navigator.of(context).pushReplacementNamed(RoutesName.onboardingScreen);
+        OnboardViewModel().checkAuthentication(context);
         _rotationController.stop();
       }
     });

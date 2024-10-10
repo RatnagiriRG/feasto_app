@@ -21,9 +21,40 @@ class AuthRepositoryImpl implements AuthRepository {
       final result = UserSessionModel.fromJson(response);
       return result.data;
     } on DioException catch (e) {
-      log(e.response.toString());
       var error = DioExceptions.fromDioException(e);
-      throw error.errorMessage;
+      final exception = e.response?.data["error"];
+      exception != null
+          ? throw e.response?.data["error"]
+          : throw error.errorMessage;
+    }
+  }
+
+  @override
+  Future<bool> signUp(
+      {required String email,
+      required String password,
+      required String phone,
+      required String name}) async {
+    try {
+      final Map<String, dynamic> data = {
+        "email": email,
+        "password": password,
+        "username": name,
+        "phone": phone
+      };
+
+      final response = await _apiService.post(AppUrls.create, data: data);
+      if (response["msg"] == "successfully register") {
+        return true;
+      }
+
+      return false;
+    } on DioException catch (e) {
+      var error = DioExceptions.fromDioException(e);
+      final exception = e.response?.data["error"];
+      exception != null
+          ? throw e.response?.data["error"]
+          : throw error.errorMessage;
     }
   }
 }

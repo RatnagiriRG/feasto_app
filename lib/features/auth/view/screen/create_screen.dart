@@ -7,8 +7,11 @@ import 'package:feasto/configs/themes/colors.dart';
 import 'package:feasto/features/auth/view/widgets/auth_email_text_field.dart';
 import 'package:feasto/features/auth/view/widgets/auth_name_text_field.dart';
 import 'package:feasto/features/auth/view/widgets/auth_password_text_field.dart';
+import 'package:feasto/features/auth/view/widgets/auth_phone_text_field.dart';
 import 'package:feasto/features/auth/view/widgets/auth_re_password_text_field.dart';
+import 'package:feasto/features/auth/view_model/auth_view_model.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class CreateScreen extends StatelessWidget {
   const CreateScreen({super.key});
@@ -39,11 +42,11 @@ class CreateScreen extends StatelessWidget {
                 child: Column(
                   children: [
                     const AppBarWidget(
-                      title: "Create Account",
+                      title: "",
                     ),
                     GradientText(
                       textAlign: TextAlign.center,
-                      text: "Welcome to Feasto",
+                      text: "Create Account",
                       style: textTheme.bodyLarge?.copyWith(
                         fontWeight: FontWeight.w700,
                         color: Colors.white,
@@ -60,7 +63,7 @@ class CreateScreen extends StatelessWidget {
                     GradientText(
                       textAlign: TextAlign.center,
                       text:
-                          "Enter your email and password for signin.\nEnjoy your food :)",
+                          "Enter your Name, Email and Password for sign up.\n",
                       style: textTheme.bodyLarge?.copyWith(
                         color: Colors.white,
                         fontSize: scrHeight * 0.012,
@@ -76,23 +79,30 @@ class CreateScreen extends StatelessWidget {
                     (scrHeight * 0.03).height,
                     const AuthEmailTextField(),
                     (scrHeight * 0.025).height,
+                    const AuthPhoneTextField(),
+                    (scrHeight * 0.025).height,
                     const AuthPasswordTextField(),
                     (scrHeight * 0.025).height,
                     const AuthRePasswordTextField(),
                     (scrHeight * 0.025).height,
-                    BouncingButtonWidget(
-                      child: Container(
-                        height: scrHeight * 0.06,
-                        width: scrWidth * 0.85,
-                        decoration: BoxDecoration(
-                          color: colorScheme.primary,
-                          borderRadius: BorderRadius.circular(8),
-                        ),
-                        child: Center(
-                          child: Text(
-                            "Sign Up",
-                            style: textTheme.bodyMedium?.copyWith(
-                              color: AppColors.white.withOpacity(.6),
+                    GestureDetector(
+                      onTap: () {
+                        context.read<AuthViewModel>().signUp(context);
+                      },
+                      child: BouncingButtonWidget(
+                        child: Container(
+                          height: scrHeight * 0.06,
+                          width: scrWidth * 0.85,
+                          decoration: BoxDecoration(
+                            color: colorScheme.primary,
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                          child: Center(
+                            child: Text(
+                              "Sign Up",
+                              style: textTheme.bodyMedium?.copyWith(
+                                color: AppColors.white.withOpacity(.6),
+                              ),
                             ),
                           ),
                         ),

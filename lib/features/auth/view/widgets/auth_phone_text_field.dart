@@ -4,10 +4,8 @@ import 'package:feasto/features/auth/view_model/auth_view_model.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-class AuthRePasswordTextField extends StatelessWidget {
-  const AuthRePasswordTextField({
-    super.key,
-  });
+class AuthPhoneTextField extends StatelessWidget {
+  const AuthPhoneTextField({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -16,7 +14,7 @@ class AuthRePasswordTextField extends StatelessWidget {
     double scrHeight = context.mediaQueryHeight;
     double scrWidth = context.mediaQueryWidth;
     return Selector<AuthViewModel, TextEditingController>(
-      selector: (p0, p1) => p1.rePasswordController,
+      selector: (p0, p1) => p1.phoneController,
       builder: (context, value, child) {
         return Column(
           children: [
@@ -25,7 +23,7 @@ class AuthRePasswordTextField extends StatelessWidget {
               child: Row(
                 children: [
                   Text(
-                    "Re-Password",
+                    "Phone",
                     style: textTheme.bodyMedium?.copyWith(
                       fontSize: scrHeight * 0.012,
                       color: AppColors.white.withOpacity(.6),
@@ -47,7 +45,7 @@ class AuthRePasswordTextField extends StatelessWidget {
               ),
               child: TextField(
                 controller: value,
-                obscureText: true,
+                keyboardType: TextInputType.number,
                 style: textTheme.bodyMedium?.copyWith(color: AppColors.white),
                 cursorColor: Colors.amber,
                 decoration: const InputDecoration(

@@ -19,7 +19,7 @@ class AppColors {
   static Color get borderColor => const Color(0xffEEEEEE);
   static Color get highlight => const Color(0xffEEEEEF);
   static Color get secondaryColor => const Color(0xff171B24);
-  static Color get backGroundColor => const Color.fromRGBO(21, 21, 24, 100);
+  static Color get backGroundColor => const Color.fromARGB(255, 21, 21, 24);
   static Color get tirtiaryColor => const Color(0xff212D46);
   //
   static Color get scaffoldBackGroundColor =>

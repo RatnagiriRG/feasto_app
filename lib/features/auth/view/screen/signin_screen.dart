@@ -24,7 +24,7 @@ class _SigninScreenState extends State<SigninScreen> {
   @override
   void initState() {
     _authViewModel = context.read<AuthViewModel>();
-    _authViewModel.initlization();
+    _authViewModel.initialize();
     super.initState();
   }
 
@@ -120,7 +120,7 @@ class _SigninScreenState extends State<SigninScreen> {
                         (scrHeight * 0.02).height,
                         GestureDetector(
                           onTap: () {
-                            context.read<AuthViewModel>().signIn();
+                            context.read<AuthViewModel>().signIn(context);
                           },
                           child: BouncingButtonWidget(
                             child: Container(
