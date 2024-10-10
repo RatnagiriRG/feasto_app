@@ -10,12 +10,14 @@ class AppBarWidget extends StatelessWidget {
     this.backButton,
     this.textColor,
     this.backButtonColor,
+    this.backgroundColor,
   });
 
   final String title;
   final VoidCallback? backButton;
   final Color? textColor;
   final Color? backButtonColor;
+  final Color? backgroundColor;
 
   @override
   Widget build(BuildContext context) {
@@ -24,6 +26,8 @@ class AppBarWidget extends StatelessWidget {
     double scrHeight = context.mediaQueryHeight;
     double scrWidth = context.mediaQueryWidth;
     return Container(
+      // height: scrHeight * 0.1,
+      color: backButtonColor ?? Colors.transparent,
       child: Column(
         children: [
           (scrHeight * 0.02).height,
