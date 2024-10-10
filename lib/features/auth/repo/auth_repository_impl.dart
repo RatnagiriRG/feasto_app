@@ -21,6 +21,7 @@ class AuthRepositoryImpl implements AuthRepository {
       final result = UserSessionModel.fromJson(response);
       return result.data;
     } on DioException catch (e) {
+      log(e.response.toString());
       var error = DioExceptions.fromDioException(e);
       throw error.errorMessage;
     }
